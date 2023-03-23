@@ -4,13 +4,13 @@ const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const path = require("path");
 const fs = require("fs");
-const OUTPUT_DIR = path.resolve(_dirname, "output");
+const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-const generateSite = require('./src/generate-site.js');
+//const generateSite = require('./src/generate-site.js');
 const team = [];
 
 const requestManagerInfo = () => {
-    return inquirer.createPromptModule([
+    return inquirer.prompt([
         {
             type: "input",
             name: "managerName",
@@ -65,7 +65,8 @@ const requestManagerInfo = () => {
         },
     ]) .then(response => {
         console.log(response);
-        const manager = new manager(response.managerName, response.managerId, response.managerEmail, response.officeNumber);
+        const manager = new Manager(response.managerName, response.employeeId, response.managerEmail, response.officeNumber);
+        manager.special = manager.officeNumber;
         team.push(manager);
         actionMenu();
     })
@@ -121,7 +122,7 @@ promptEngineerData = () => {
     }, 
     {
         type: "input",
-        name: "guthub",
+        name: "github",
         message: "Enter the employee's github username",
         validate: github => {
             if (github) {
@@ -134,7 +135,8 @@ promptEngineerData = () => {
     },
     ]) .then(response => {
         console.log(response);
-        const engineer = new engineer(response.engineerName, response.employeeId, response.employeeEmail, response.github);
+        const engineer = new Engineer(response.engineerName, response.employeeId, response.employeeEmail, response.github);
+        engineer.special = engineer.github;
         team.push(engineer);
         actionMenu();
     })
@@ -202,7 +204,8 @@ promptInternData = () => {
         },
     ]) .then(response => {
         console.log(response);
-        const intern = new Intern(response.name, response.internId, response.internEmail, response.internSchool);
+        const intern = new Intern(response.internName, response.internId, response.internEmail, response.internSchool);
+        intern.special = intern.school;
         team.push(intern);
         actionMenu();
     })
@@ -220,7 +223,37 @@ teamComplete = () => {
     if (!fs.existsSync(OUTPUT_DIR)) {
         fs.mkdirSync(OUTPUT_DIR);
     }
-    fs.writeFileSync(outputPath, render(team), "utf-8");
+    fs.writeFileSync(outputPath,`
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="">
+    <script src=""></script>
+    
+    <title>My Team</title>
+</head>
+<body>
+    <header>
+        <h1> My Team</h1>
+    </header>
+        <main>
+    `);
+    for (let i = 0; i < team.length; i++) {
+       fs.appendFileSync(outputPath,`
+       ${team[i].name}
+       ${team[i].id}
+       ${team[i].email}
+       ${team[i].special}
+       `)  
+    }
+   fs.appendFileSync(outputPath, `
+    </main>
+    </body>
+    </html>
+   `)
 };
 
 const actionMenu = () => {
@@ -239,14 +272,14 @@ const actionMenu = () => {
             ]
         }
     ]) .then(userAction => {
-        switch (userAction.menu) {
-            case "Engineer":
+        switch (userAction.actionItems) {
+            case "Add an Engineer":
                 promptEngineerData();
                 break;
-            case "Intern":
+            case "Add an Intern":
                 promptInternData();
                 break;
-            case "I am done building my team.":
+            case "My Team is Complete":
                 teamComplete();
                 break;
             }

@@ -1,7 +1,7 @@
 const Engineer = require('../lib/Engineer');
-const engineer = new Engineer('Sarah', '010203', 'sarahw@gmail.com', 'saraw');
+const engineer = new Engineer('Sarah', '010203', 'sarahw@gmail.com', 'saraw',);
 
-test('test to set engineeer values for engineer object', () => {
+test('test to set engineer values for engineer object', () => {
     expect(engineer.name).toBe('Sarah');
     expect(engineer.id).toBe('010203');
     expect(engineer.email).toBe('sarahw@gmail.com');
@@ -21,7 +21,7 @@ test('test to set email from getEmail()', () => {
 });
 
 test('test to set github from getGithub()', () => {
-    expect(engineer.getGitHub()).toBe('Engineer');
+    expect(engineer.getGitHub()).toBe('saraw');
 });
 
 test('test to set Role from getRole()', () => {
