@@ -26,4 +26,4 @@ Once the user has cloned the repo and run the node app.js the command-line, the 
 
 ## Links & Screenshots
 
-Walkthrough [Video](#https://watch.screencastify.com/v/cm6eOxy4KHbwtwrv7Lk1) demonstrating application functionality.
+Walkthrough [Video](https://watch.screencastify.com/v/cm6eOxy4KHbwtwrv7Lk1) demonstrating application functionality.
